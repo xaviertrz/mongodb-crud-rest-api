@@ -54,15 +54,33 @@ const usersPatch = (req = request, res = response) => {
 
 const usersDelete = async (req = request, res = response) => {
   const { id } = req.params;
-  const query = { status: false };
+  const uid = req.uid;
+  const authUser = req.authUser;
+  console.log(authUser)
+
+  if (!authUser) {
+    return res.status(401).json({
+      msg: "Error - User not found",
+    });
+  }
+
+  if (!authUser.state) {
+    return res.status(401).json({
+      msg: "Error - Disabled user",
+    });
+  }
 
   /* For physical delete
   const deletedUser = await User.findByIdAndDelete(id) */
 
-  const deletedUser = await User.findByIdAndUpdate(id, query);
+  const deletedUser = await User.findByIdAndUpdate(id, {
+    state: false,
+  });
 
   res.json({
     deletedUser,
+    authUser,
+    uid,
   });
 };
 

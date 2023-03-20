@@ -16,10 +16,10 @@ const emailExists = async (email) => {
 };
 
 const isIdValid = async (id) => {
-  console.log(id)
+  console.log(id);
   const findedUserById = await User.findOne({ id });
   console.log(findedUserById)
-  if (!findedUserById) {
+  if (findedUserById) {
     throw new Error(`The id ${id} doesn't exists.`);
   }
 };
